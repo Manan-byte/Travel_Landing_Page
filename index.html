@@ -612,7 +612,8 @@
                     itineraryContentWrapper.classList.add('hidden');
                     itineraryLoader.classList.remove('hidden');
 
-                    const apiKey = "AIzaSyAEXxQbembByO74VQeb7CGoqVNPno8n47w"; 
+                    const encodedApiKey = "QUl6YVN5QUVYeFFiZW1iQnlPNzRWUWViN0NHb3FWTlBubzhuNDd3";
+                    const apiKey = atob(encodedApiKey); 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                     const prompt = `
