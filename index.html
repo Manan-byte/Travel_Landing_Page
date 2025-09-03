@@ -580,73 +580,89 @@
             }
         }
         
-        // Gemini API Itinerary Planner
-        const generateBtn = document.getElementById('generate-plan-btn');
-        const plannerForm = document.getElementById('planner-form');
-        const destinationInput = document.getElementById('destination');
-        const durationInput = document.getElementById('duration');
-        const itineraryResult = document.getElementById('itinerary-result');
-        const closeItineraryBtn = document.getElementById('close-itinerary-btn');
-        const itineraryContent = document.getElementById('itinerary-content');
-        const itineraryLoader = document.getElementById('itinerary-loader');
-        const itineraryContentWrapper = document.getElementById('itinerary-content-wrapper');
+         // Gemini API Itinerary Planner
+            const generateBtn = document.getElementById('generate-plan-btn');
+            const destinationInput = document.getElementById('destination');
+            const durationInput = document.getElementById('duration');
+            const itineraryResult = document.getElementById('itinerary-result');
+            const closeItineraryBtn = document.getElementById('close-itinerary-btn');
+            const itineraryContent = document.getElementById('itinerary-content');
+            const itineraryLoader = document.getElementById('itinerary-loader');
+            const itineraryContentWrapper = document.getElementById('itinerary-content-wrapper');
 
-
-        closeItineraryBtn.addEventListener('click', () => {
-            itineraryResult.classList.add('hidden');
-        });
-
-        generateBtn.addEventListener('click', async () => {
-            const destination = destinationInput.value.trim();
-            const duration = durationInput.value.trim();
-
-            if (!destination || !duration) {
-                alert('Mohon isi tujuan destinasi dan jumlah hari.');
-                return;
-            }
-
-            // Show loading state
-            generateBtn.disabled = true;
-            itineraryResult.classList.remove('hidden');
-            itineraryContentWrapper.classList.add('hidden');
-            itineraryLoader.classList.remove('hidden');
-
-            const apiUrl = `/.netlify/functions/gemini-proxy`;
-
-            const payload = {
-                destination: destination,
-                duration: duration
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+            if(closeItineraryBtn) {
+                closeItineraryBtn.addEventListener('click', () => {
+                    itineraryResult.classList.add('hidden');
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.html) {
-                    itineraryContent.innerHTML = result.html;
-                } else {
-                    throw new Error("Respons dari server tidak valid.");
-                }
-
-            } catch (error) {
-                console.error('Error calling Netlify function:', error);
-                itineraryContent.innerHTML = `<p class="text-red-500">Gagal terhubung ke layanan AI. Periksa koneksi internet Anda atau coba lagi nanti. Error: ${error.message}</p>`;
-            } finally {
-                // Reset button state and show content
-                itineraryLoader.classList.add('hidden');
-                itineraryContentWrapper.classList.remove('hidden');
-                generateBtn.disabled = false;
             }
-        });
+
+            if(generateBtn) {
+                generateBtn.addEventListener('click', async () => {
+                    const destination = destinationInput.value.trim();
+                    const duration = durationInput.value.trim();
+
+                    if (!destination || !duration) {
+                        alert('Mohon isi tujuan destinasi dan jumlah hari.');
+                        return;
+                    }
+
+                    generateBtn.disabled = true;
+                    itineraryResult.classList.remove('hidden');
+                    itineraryContentWrapper.classList.add('hidden');
+                    itineraryLoader.classList.remove('hidden');
+
+                    const apiKey = "AIzaSyAEXxQbembByO74VQeb7CGoqVNPno8n47w"; // [MODIFIED] API Key is now here
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                    const prompt = `
+                        Anda adalah seorang ahli travel di Indonesia. Buatkan rencana perjalanan wisata di "${destination}" selama ${duration} hari.
+                        Tolong berikan jawaban dalam format HTML yang rapi dan menarik.
+                        Struktur jawaban harus seperti ini:
+                        - Gunakan <h3> untuk judul utama seperti "Rencana Perjalanan ${duration} Hari di ${destination}".
+                        - Gunakan <h4> untuk setiap judul hari (contoh: "Hari 1: Eksplorasi Kota").
+                        - Gunakan <ul> untuk daftar kegiatan dan <li> untuk setiap item kegiatan.
+                        - Setiap item kegiatan harus menyertakan nama tempat dalam format <strong>Nama Tempat</strong> dan diikuti deskripsi singkat tentang apa yang bisa dilakukan di sana.
+                        - Fokus pada tempat wisata populer, kuliner khas yang wajib dicoba, dan aktivitas menarik yang relevan dengan budaya lokal.
+                        - Berikan saran praktis jika ada, seperti waktu terbaik untuk berkunjung.
+                        - Pastikan outputnya hanya kode HTML, tanpa markdown seperti \`\`\`html atau \`\`\`.
+                    `;
+
+                    const payload = {
+                        contents: [{ parts: [{ text: prompt }] }],
+                    };
+
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        const candidate = result.candidates?.[0];
+                        
+                        if (candidate && candidate.content?.parts?.[0]?.text) {
+                            let generatedHtml = candidate.content.parts[0].text;
+                            generatedHtml = generatedHtml.replace(/```html/g, '').replace(/```/g, '');
+                            itineraryContent.innerHTML = generatedHtml;
+                        } else {
+                            throw new Error("Struktur respons dari API tidak valid.");
+                        }
+
+                    } catch (error) {
+                        console.error('Error calling Gemini API:', error);
+                        itineraryContent.innerHTML = `<p class="text-red-500">Gagal terhubung ke layanan AI. Periksa koneksi internet Anda atau coba lagi nanti. Error: ${error.message}</p>`;
+                    } finally {
+                        itineraryLoader.classList.add('hidden');
+                        itineraryContentWrapper.classList.remove('hidden');
+                        generateBtn.disabled = false;
+                    }
+                });
+            }
         
         // Script for 3D background animation
         const canvas = document.getElementById('hero-canvas');
