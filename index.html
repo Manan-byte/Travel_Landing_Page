@@ -580,6 +580,7 @@
             }
         }
         
+        
          // Gemini API Itinerary Planner
             const generateBtn = document.getElementById('generate-plan-btn');
             const destinationInput = document.getElementById('destination');
@@ -611,7 +612,7 @@
                     itineraryContentWrapper.classList.add('hidden');
                     itineraryLoader.classList.remove('hidden');
 
-                    const apiKey = "AIzaSyAEXxQbembByO74VQeb7CGoqVNPno8n47w"; // [MODIFIED] API Key is now here
+                    const apiKey = "AIzaSyAEXxQbembByO74VQeb7CGoqVNPno8n47w"; 
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                     const prompt = `
@@ -663,7 +664,6 @@
                     }
                 });
             }
-        
         // Script for 3D background animation
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
