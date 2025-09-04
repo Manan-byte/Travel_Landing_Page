@@ -550,7 +550,46 @@
                 mobileMenu.classList.add('hidden');
             });
         });
-        
+        // --- SCRIPT ANTI-COPY-PASTE LENGKAP ---
+        document.addEventListener('keydown', function(event) {
+            // Selalu izinkan jika user sedang mengetik di form input atau textarea
+            const target = event.target;
+            const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+
+            // Blok F12 (Dev Tools)
+            if (event.key === 'F12') {
+                event.preventDefault();
+            }
+
+            // Blok Ctrl+... combinations
+            if (event.ctrlKey) {
+                const key = event.key.toLowerCase();
+                
+                // Blok Ctrl+C (Copy), Ctrl+U (View Source), Ctrl+S (Save)
+                if (['c', 'u', 's'].includes(key)) {
+                    // Izinkan Ctrl+C jika user sedang di dalam form input
+                    if (key === 'c' && isInput) {
+                        return;
+                    }
+                    event.preventDefault();
+                }
+
+                // Blok Ctrl+A (Select All)
+                if (key === 'a') {
+                     // Izinkan Ctrl+A jika user sedang di dalam form input
+                    if (isInput) {
+                        return;
+                    }
+                    event.preventDefault();
+                }
+
+                // Blok Ctrl+Shift+... combinations for Dev Tools
+                if (event.shiftKey && ['i', 'j', 'c'].includes(key)) {
+                    event.preventDefault();
+                }
+            }
+        });
+        // --- Script asli Anda di bawah ini ---
         // Script untuk mengubah background header saat scroll
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
@@ -764,6 +803,7 @@
     </script>
 </body>
 </html>
+
 
 
 
