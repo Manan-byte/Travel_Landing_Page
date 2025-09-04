@@ -31,10 +31,7 @@
     <link rel="icon" href="https://placehold.co/32x32/3B82F6/FFFFFF?text=HT" type="image/png">
     
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-image: linear-gradient(to bottom, white, #F1F5F9);
-            color: #1E293B;
+        body  {
         }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #E2E8F0; }
@@ -62,8 +59,8 @@
         .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
     </style>
 </head>
-<body class="overflow-x-hidden">
-
+<body 
+class="overflow-x-hidden">
     <!-- Header / Navbar -->
     <header id="header" class="bg-white/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -534,8 +531,6 @@
             </div>
         </div>
     </footer>
-
-
     <script>
         // Script untuk Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -550,7 +545,17 @@
                 mobileMenu.classList.add('hidden');
             });
         });
-        // --- SCRIPT ANTI-COPY-PASTE LENGKAP ---
+        
+        // Script untuk mengubah background header saat scroll
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-white/80', 'shadow-lg');
+            } else {
+                header.classList.remove('bg-white/80', 'shadow-lg');
+            }
+        });
+// --- SCRIPT ANTI-COPY-PASTE LENGKAP ---
         document.addEventListener('keydown', function(event) {
             // Selalu izinkan jika user sedang mengetik di form input atau textarea
             const target = event.target;
@@ -590,16 +595,6 @@
             }
         });
         // --- Script asli Anda di bawah ini ---
-        // Script untuk mengubah background header saat scroll
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('bg-white/80', 'shadow-lg');
-            } else {
-                header.classList.remove('bg-white/80', 'shadow-lg');
-            }
-        });
-
         // Script untuk tahun di footer
         document.getElementById('year-footer').textContent = new Date().getFullYear();
         
@@ -803,8 +798,5 @@
     </script>
 </body>
 </html>
-
-
-
 
 
